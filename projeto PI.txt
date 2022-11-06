@@ -1,0 +1,311 @@
+CREATE TABLE TB_Pessoa(  
+Id_Cod_pessoa numeric(4) not null Primary Key, 
+Nm_nome  Varchar(100) not null, 
+Dt_Data_nascimento date not null, 
+Nr_rg  Varchar(20), 
+Nr_Cpf Varchar(20) not null, 
+Ds_email Varchar (50) unique 
+)
+ 
+Insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (1,'ana maria de lucca', to_date('13/05/1990','dd/mm/yyyy'),'246103000','65368323026','ana.m.lucca@hotmail.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (2,'vitoria souza almeida', to_date('12/12/1942','dd/mm/yyyy'),'371588571','90464380073','v.souza.alm@gmail.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (3,'mariana gomes goncalves', to_date('17/08/1971','dd/mm/yyyy'),'484874780','42384033042','mari.gomes.g@outlook.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (4,'yasmin martins silva', to_date('18/01/1995','dd/mm/yyyy'),'326985608','94552413074','yasminMS@gmail.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (5,'agatha rodrigues melo', to_date('19/04/1985','dd/mm/yyyy'),'391303934','03092525043','agatha.melo@hotmail.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (6,'fernanda souza barbosa', to_date('25/03/1982','dd/mm/yyyy'),'122633052','94543147260','FernandaSouzaBarbosa@gmail.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (7,'gabrielly cavalcanti ribeiro', to_date('14/05/1986','dd/mm/yyyy'),'348132025','44105247980','G.cavalcantir@hotmail.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (8,'sophia melo pinto', to_date('04/11/1991','dd/mm/yyyy'),'391048387','15856521994','sophi_melo@outlook.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (9,'kaua castro carvalho', to_date('04/05/1977','dd/mm/yyyy'),'327773418','18934310880','castro.k.carvalho@gmail.com');
+insert into tb_pessoa(Id_Cod_pessoa,Nm_nome,Dt_Data_nascimento,Nr_rg,Nr_cpf,Ds_email) values (10,'caio azevedo barbosa', to_date('26/01/1987','dd/mm/yyyy'),'123331857','85713704866','caio_ab@gmail.com');
+
+select * from tb_pessoa  
+order by Id_Cod_pessoa asc;
+
+ 
+CREATE TABLE TB_Paciente( 
+Id_cod_paciente numeric(4) not null, 
+Nm_nome_mae  Varchar(100) not null, 
+Id_cod_pessoa numeric(4) not null,
+constraints pk_TB_Paciente primary key (Id_cod_paciente),
+constraints fk_TB_Paciente foreign key (Id_Cod_pessoa) references TB_Pessoa (Id_Cod_pessoa)
+)
+
+
+CREATE TABLE TB_Laboratorio(
+Id_cod_laboratorio numeric (4) not null primary key,
+Nm_nome_laboratorio Varchar(40) not null,
+Id_cod_endereco numeric(4) not null,
+constraints fk_TB_Laboratorio foreign key (Id_cod_endereco) references TB_Endereco( Id_cod_endereco)
+)
+ 
+CREATE TABLE TB_Endereco_Pessoa( 
+Id_cod_endereco Numeric(4) not null, 
+Id_Cod_pessoa Numeric(4) not null,
+constraints fk_end_end foreign key (Id_cod_endereco) references TB_Endereco (Id_cod_endereco),
+constraints fk_pes_end foreign key (Id_Cod_pessoa) references TB_Pessoa(Id_Cod_pessoa)
+)
+ 
+CREATE TABLE TB_Telefone_Pessoa( 
+Id_cod_telefone Numeric(4) not null, 
+Id_Cod_pessoa Numeric(4) not null,
+constraints fk_tel_tel foreign key (Id_cod_telefone) references TB_Telefone (Id_cod_telefone),
+constraints fk_pes_tel foreign key (Id_Cod_pessoa) references TB_Pessoa(Id_Cod_pessoa)
+)
+ 
+CREATE TABLE TB_Laudo( 
+Id_cod_laudo numeric(4) not null Primary Key,
+St_tp_amostra Varchar(20) not null,
+St_adequação  Varchar (20),
+St_componente char(5),
+Id_cod_diagnostico numeric (4) not null,
+Id_cod_laboratorio numeric (4) not null,
+Id_cod_paciente numeric(4) not null,
+constraints fk_lau_diag foreign key (Id_cod_diagnostico) references TB_Diagnosticos (Id_cod_diagnostico),
+constraints fk_lau_lab foreign key (Id_cod_laboratorio) references TB_Laboratorio(Id_cod_laboratorio),
+constraints fk_lau_pac foreign key (Id_cod_paciente) references TB_Paciente (Id_cod_paciente)
+) 
+alter table TB_Laudo 
+add constraint ck_comp 
+check (St_componente in ('True','Null','False'));
+
+ 
+CREATE TABLE TB_Diagnosticos( 
+Id_cod_diagnostico numeric(4) not null Primary Key, 
+Nm_diagnostico_primario  Varchar(50) Not null, 
+Nm_diagnostico_final  Varchar(50) Not Null, 
+Id_cod_conduta Numeric (4) Not Null,
+constraints fk_diag_cond foreign key (Id_cod_conduta) references TB_Conduta (Id_cod_conduta)
+)
+
+CREATE TABLE TB_Nome_Diagnosticos(
+Id_cod_nome_diag numeric(4)not null Primary Key,
+Nm_nome_diagnostico Varchar(20)not null,
+Id_cod_conduta numeric(4)not null,
+constraints fk_nd foreign key (Id_cod_conduta) references TB_Conduta(Id_cod_conduta)
+)
+
+
+CREATE TABLE TB_Endereco( 
+Id_cod_endereco Numeric(4) not null Primary Key,
+Nm_tp_logradouro  Varchar(30)not null,
+Ds_desc_logradouro Varchar(50) not null,
+Nr_nmr_logradouro Numeric(5) not null,
+Ds_compl_logradouro  Varchar(50),
+Id_cod_cidade numeric(4) not null,
+Id_cod_cep Numeric(4) not null
+)
+alter table TB_Endereco add constraints fk_TB_Endereco foreign key (Id_cod_cidade) references TB_Cidade(Id_cod_cidade);
+alter table TB_Endereco add constraints fk_TB_Endereco_cep foreign key (Id_cod_cep) references TB_Cep(Id_cod_cep);
+ 
+CREATE TABLE TB_Telefone( 
+Id_cod_telefone Numeric(4) Not Null Primary Key, 
+Nr_DDI Char(3)not null, 
+Nr_DDD Char(3)not null, 
+Nr_sufixo Numeric(5)not null, 
+Nr_Prefixo Numeric(5)not null,
+Id_cod_Tp_telefone Numeric(20) Not Null,
+constraints fk_TB_Telefone foreign key (Id_cod_tp_telefone) references TB_Tipo_Telefone (Id_cod_tp_telefone)
+) 
+ 
+CREATE TABLE TB_Funcionario( 
+Id_Crm_Crbm Numeric (5) not null Primary Key, 
+Id_Cod_pessoa Numeric(4) not null, 
+Id_cod_cargo Numeric(4) not null,
+constraints fk_func_pes foreign key (Id_Cod_pessoa) references TB_Pessoa (Id_Cod_pessoa),
+constraints fk_func_carg foreign key (Id_cod_cargo) references TB_Cargo (Id_cod_cargo)
+)
+ 
+CREATE TABLE TB_Laudo_organismo( 
+Id_cod_laudo Numeric(4) not null, 
+Id_cod_organismo Numeric(4) not null,
+constraints fk_lau_lau foreign key (Id_cod_laudo) references TB_Laudo(Id_cod_laudo),
+constraints fk_lau_org foreign key (Id_cod_organismo) references TB_Organismo(Id_cod_organismo)
+) 
+ 
+CREATE TABLE TB_Conduta( 
+Id_cod_conduta Numeric(4) Not Null Primary Key, 
+Nr_grau  Char(1) not null 
+)
+ 
+CREATE TABLE TB_Cidade( 
+Id_cod_cidade Numeric (4) Not Null Primary Key, 
+Nm_nome_cidade Varchar (150) Not Null, 
+Id_cod_estado Numeric(4) Not Null,
+constraints fk_TB_Estado foreign key (Id_cod_estado) references TB_Estado (Id_cod_estado)
+)
+
+CREATE TABLE TB_Cep( 
+Id_cod_cep Numeric (4) Not Null Primary Key, 
+Nr_nmr_cep Numeric(8) Not Null 
+) 
+ 
+CREATE TABLE TB_Estado( 
+Id_cod_estado Numeric(4) Not Null Primary Key, 
+Nm_sigla_estado Char(2) Not Null, 
+Nm_nome_estado Varchar(50)Not Null 
+)
+ 
+CREATE TABLE TB_Tipo_Telefone( 
+Id_cod_tp_telefone Numeric(4) Not Null Primary Key, 
+Ds_desc_tp_telefone Varchar (15) Not Null 
+) 
+ 
+CREATE TABLE TB_Cargo( 
+Id_cod_cargo Numeric(4) Not Null Primary Key, 
+Nm_nome_cargo  Varchar (15) Not Null, 
+Ds_desc_cargo Varchar(300) Not null 
+)
+ 
+CREATE TABLE TB_Laudo_funcionario( 
+Id_cod_laudo Numeric (4) Not Null, 
+Id_Crm_Crbm Numeric(5) Not Null,
+constraints fk_lau_f foreign key (Id_cod_laudo) references TB_Laudo(Id_cod_laudo),
+constraints fk_lau_crm foreign key (Id_Crm_Crbm) references TB_Funcionario(Id_Crm_Crbm)
+) 
+ 
+CREATE TABLE TB_Organismo( 
+Id_cod_organismo Numeric (4) Not Null Primary Key, 
+Nm_nome_organismo Varchar (150)Not Null 
+)
+
+Insert into Tb_Cargo (Id_cod_cargo,Nm_nome_cargo,Ds_desc_cargo) values (1, 'Patologista', 'Medico com residencia em Citopatologia geral e ginecologica');
+Insert into Tb_Cargo (Id_cod_cargo,Nm_nome_cargo,Ds_desc_cargo) values (2, 'Analista', 'Biomedico, farmaceutico ou biologo, devidamente habilitados perante as normas de seus conselhos');
+
+Insert into TB_Organismo (Id_cod_organismo,Nm_nome_organismo) values (1,'Clamidia');
+Insert into TB_Organismo (Id_cod_organismo,Nm_nome_organismo) values (2,'Sifilis');
+Insert into TB_Organismo (Id_cod_organismo,Nm_nome_organismo) values (3,'Gonorroea');
+Insert into TB_Organismo (Id_cod_organismo,Nm_nome_organismo) values (4,'HPV');
+
+insert into TB_Tipo_Telefone(Id_cod_tp_telefone,Ds_desc_tp_telefone) values (1,'celular');
+insert into TB_Tipo_Telefone(Id_cod_tp_telefone,Ds_desc_tp_telefone) values (2,'residencial');
+
+insert into  TB_Estado(Id_cod_estado, Nm_sigla_estado,Nm_nome_estado) values(1,'SP', 'Sao Paulo');
+insert into  TB_Estado(Id_cod_estado, Nm_sigla_estado,Nm_nome_estado) values(2, 'MT', 'Mato Grosso');
+insert into  TB_Estado(Id_cod_estado, Nm_sigla_estado,Nm_nome_estado) values(3, 'RJ', 'Rio de Janeiro');
+insert into  TB_Estado(Id_cod_estado, Nm_sigla_estado,Nm_nome_estado) values(4, 'MG', 'Minas Gerais');
+insert into  TB_Estado(Id_cod_estado, Nm_sigla_estado,Nm_nome_estado) values(5, 'SC', 'Santa Catarina');
+
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (1,04524001);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (2,04046300);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (3,01506000);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (4,01319000);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (5,03081003);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (6,03069000);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (7,03319000);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (8,04278000);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (9,09520900);
+insert into  TB_Cep(Id_cod_cep,Nr_nmr_cep) values (10,09015010);
+
+insert into TB_Cidade(Id_cod_cidade,Nm_nome_cidade,Id_cod_estado) values (1,'Sao Paulo',1);
+insert into TB_Cidade(Id_cod_cidade,Nm_nome_cidade,Id_cod_estado) values (2,'Santo Andre',1);
+insert into TB_Cidade(Id_cod_cidade,Nm_nome_cidade,Id_cod_estado) values (3,'Guarulhos',1);
+insert into TB_Cidade(Id_cod_cidade,Nm_nome_cidade,Id_cod_estado) values (4,'Maua',1);
+
+insert into TB_Conduta(Id_cod_conduta,Nr_grau) values (1,0);
+insert into TB_Conduta(Id_cod_conduta,Nr_grau) values (2,1);
+insert into TB_Conduta(Id_cod_conduta,Nr_grau) values (3,2);
+insert into TB_Conduta(Id_cod_conduta,Nr_grau) values (4,3);
+
+insert into TB_Funcionario(Id_Crm_Crbm,Id_Cod_pessoa,Id_cod_cargo)values (31095,6,1);
+insert into TB_Funcionario(Id_Crm_Crbm,Id_Cod_pessoa,Id_cod_cargo)values (56784,7,1);
+insert into TB_Funcionario(Id_Crm_Crbm,Id_Cod_pessoa,Id_cod_cargo)values (48727,8,2);
+insert into TB_Funcionario(Id_Crm_Crbm,Id_Cod_pessoa,Id_cod_cargo)values (19035,9,2);
+insert into TB_Funcionario(Id_Crm_Crbm,Id_Cod_pessoa,Id_cod_cargo)values (46206,10,2);
+
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(1,55,011,98675,4566,1);
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(2,55,011,94573,9973,1);
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(3,55,011,2684,3365,2);
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(4,55,011,99391,9699,1);
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(5,55,011,3371,3656,2);
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(6,55,011,96776,6500,1);
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(7,55,011,91323,4212,1);
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(8,55,011,6172,2302,2);
+insert into TB_Telefone(Id_cod_telefone,Nr_DDI,Nr_DDD,Nr_sufixo,Nr_Prefixo,Id_cod_Tp_telefone) values(9,55,011,98253,0024,1);
+
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (1,'Rua','Alameda dos Arapanés',1160,'Apartamento 13 Bloco 2',1,1);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (2,'Av','Jabaquara',1730,'Apartamento 5 Bloco A',1,2);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (3,'Rua','Galvao Bueno',152, 'Casa',1,3);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (4,'Rua','Maria Paula',120, 'Apartamento 144',1,4);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (5,'Rua','Tuiuti',589, 'Apartamento 160 Bloco Sabia',1,5);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (6,'Rua','Doutor Angelo Vita',259,'Casa',1,6);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (7,'Rua','Cantagalo',74,'Casa',1,7);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (8,'Av','Dr Gentil de Moura',284,'Casa',1,8);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (9,'Av','Francisco Matarazzo',969,'Apartamento 32',1,9);
+insert into TB_Endereco(Id_cod_endereco,Nm_tp_logradouro,Ds_desc_logradouro,Nr_nmr_logradouro,Ds_compl_logradouro,Id_cod_cidade,Id_cod_cep) values (10,'Rua', 'Bernardino de Campos',86,'Casa',2,10);
+
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (1,1);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (2,2);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (3,3);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (4,4);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (5,5);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (6,6);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (7,7);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (8,8);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (9,9);
+insert into TB_Endereco_Pessoa(Id_cod_endereco,Id_Cod_pessoa) values (10,10);
+
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (1,1);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (2,2);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (3,3);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (4,4);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (5,5);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (6,6);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (7,7);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (8,8);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (9,9);
+insert into TB_Telefone_Pessoa(Id_cod_telefone,Id_Cod_pessoa) values (10,10);
+
+insert into TB_Paciente(Id_cod_paciente,Nm_nome_mae,Id_cod_pessoa) values (2609,'Rosarinha Almeida de Lucca',1);
+insert into TB_Paciente(Id_cod_paciente,Nm_nome_mae,Id_cod_pessoa) values (2666,'Natalia Souza Almeida',2);
+insert into TB_Paciente(Id_cod_paciente,Nm_nome_mae,Id_cod_pessoa) values (2799,'Francisca Lindoya Goncalves',3);
+insert into TB_Paciente(Id_cod_paciente,Nm_nome_mae,Id_cod_pessoa) values (2746,'Luciana Fernandez de Melo',4);
+insert into TB_Paciente(Id_cod_paciente,Nm_nome_mae,Id_cod_pessoa) values (3103,'Maria Estela Silva',5);
+
+insert into  TB_Laboratorio(Id_cod_laboratorio,Nm_nome_laboratorio,Id_cod_endereco) values (1,'Delboni Auriemo',5);
+insert into  TB_Laboratorio(Id_cod_laboratorio,Nm_nome_laboratorio,Id_cod_endereco) values (2,'Alta Diagnosticos',3);
+insert into  TB_Laboratorio(Id_cod_laboratorio,Nm_nome_laboratorio,Id_cod_endereco) values (3,'A+',7);
+insert into  TB_Laboratorio(Id_cod_laboratorio,Nm_nome_laboratorio,Id_cod_endereco) values (4,'Fleury',9);
+insert into  TB_Laboratorio(Id_cod_laboratorio,Nm_nome_laboratorio,Id_cod_endereco) values (5,'Hospital Israelita Albert Einstein',10);
+
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values ();
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values ();
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values ();
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values ();
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values ();
+
+
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2301,'INSAT',1);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2302,'NEGAT',2);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2303,'INFLA',2);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2304,'ASCUS',3);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2305,'LSIL',3);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2306,'ASC-H',4);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2307,'HSIL',4);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2308,'HSIL-MICRO',4);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2309,'CEC',4);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2310,'AGC',4);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2311,'AGC-H',4);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2312,'AIS',4);
+insert into TB_Nome_Diagnosticos(Id_cod_nome_diag,Nm_nome_diagnostico,Id_cod_conduta) values(2313,'ADENO-INV',4);
+
+
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values (4104,'CONV','SATIS','FALSE');
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values ();
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values ();
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values ();
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values ();
+
+
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values (12,'INFLA','NEGAT',2);
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values (13,'NEGAT','NEGAT',2);
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values (14,'NEGAT','HSIL',4);
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values (15,'ASC-H','ASCUS',3);
+insert into TB_Diagnosticos(Id_cod_diagnostico,Nm_diagnostico_primario,Nm_diagnostico_final,Id_cod_conduta) values (16,'LSIL','HSIL',4);
+
+
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values (4104,'CONV','SATIS','False',12,5,2609);
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values (4001,'CONV','SATIS','False',13,5,2666);
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values (4003,'CONV','SATIS','True',14,2,2799);
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values (4200,'CONV','SATIS','True',15,1,2746);
+insert into TB_Laudo(Id_cod_laudo,St_tp_amostra,St_adequação,St_componente,Id_cod_diagnostico,Id_cod_laboratorio,Id_cod_paciente) values (4965,'CONV','SATIS','True',16,5,3103);
+
